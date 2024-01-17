@@ -11,6 +11,7 @@ export const getProducts = async () => {
     price,
     productType,
     categories[] ->{
+      _id,
       title,
       mainImage { asset->{ url }},
     }
