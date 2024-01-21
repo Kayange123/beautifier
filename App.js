@@ -5,6 +5,7 @@ import OnBoardingScreen from "./screens/OnBoardingScreen";
 import { Provider } from "react-redux";
 import store from "./context/store";
 import ProductScreen from "./screens/ProductScreen";
+import { BottomTab } from "./components/common";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
           <Stack.Screen name="ProductScreen" component={ProductScreen} />
         </Stack.Navigator>
       </Provider>
+      <BottomTab />
     </NavigationContainer>
   );
 }

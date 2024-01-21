@@ -13,6 +13,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const ProductScreen = ({
   route: {
@@ -22,8 +23,9 @@ const ProductScreen = ({
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
   const products = useSelector((state) => state?.feeds?.feeds);
-
+  const navigation = useNavigation();
   const screenHeight = Math.round(Dimensions.get("window").height);
+  const [qty, setQty] = useState(1);
 
   useEffect(() => {
     if (products) {
@@ -31,6 +33,11 @@ const ProductScreen = ({
     }
     setIsLoading(false);
   }, []);
+
+  const handleQty = (value) => {
+    const newQty = qty + parseInt(value);
+    setQty(newQty > 0 ? newQty : 1);
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == "ios" ? "position" : "height"}
@@ -46,7 +53,7 @@ const ProductScreen = ({
         <>
           <SafeAreaView className="w-full h-full">
             <View className="flex flex-row items-center justify-between px-4 py-2">
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Entypo name="chevron-left" size={32} color="#555" />
               </TouchableOpacity>
               <TouchableOpacity>
@@ -118,14 +125,26 @@ const ProductScreen = ({
                   {data?.price.toLocaleString()} Tsh
                 </Text>
                 <View className=" flex-row items-center justify-center space-x-8 rounded-xl border border-gray-200 px-4 py-1">
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    disabled={qty === 1}
+                    onPress={() => handleQty(-1)}
+                  >
                     <Text className="text-xl font-bold text-black">-</Text>
                   </TouchableOpacity>
-                  <TextInput value="1" />
-                  <TouchableOpacity>
+                  <TextInput
+                    value={qty}
+                    keyboardType="numeric"
+                    onChangeText={(text) => setQty(text)}
+                  />
+                  <TouchableOpacity onPress={() => handleQty(1)}>
                     <Text className="text-xl font-bold text-black">+</Text>
                   </TouchableOpacity>
                 </View>
+                <TouchableOpacity className=" bg-black px-4 py-2 rounded-lg">
+                  <Text className="font-semibold text-base text-gray-50">
+                    Cart
+                  </Text>
+                </TouchableOpacity>
               </View>
             </KeyboardAvoidingView>
           </SafeAreaView>
